@@ -1,0 +1,14 @@
+recipe: default.v1
+language: en
+pipeline:
+- name: LLMCommandGenerator
+  llm:
+    type: "cohere"
+    model: "command"
+    temperature: 0.7
+
+policies:
+- name: FlowPolicy
+#  - name: EnterpriseSearchPolicy
+#  - name: RulePolicy
+assistant_id: 20240627-152245-khaki-isotope

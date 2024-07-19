@@ -1,0 +1,72 @@
+flows:
+  say_hello:
+    description: A simple flow that greets the user
+    steps:
+      - action: utter_greet
+      - link: collect_personal_details
+
+  collect_personal_details:
+    description: This flow gather personal details from the user like his/her name and age
+    steps:
+      - collect: first_name
+        reset_after_flow_ends: false
+      - collect: last_name
+        reset_after_flow_ends: false
+      - link: age_limit
+
+  age_limit:
+    description: check the user age if he is eligible to make a transaction
+    steps:
+      - collect: age
+        ask_before_filling: true
+        reset_after_flow_ends: false
+        next:
+          - if: slots.age < 18
+            then:
+              - action: utter_too_young
+                next: END
+          - else:
+              - action: utter_old_enough
+              - link: transfer_money
+
+  transfer_money:
+    description: This flow lets users send money to friends and family.
+    steps:
+      - collect: recipient
+      - collect: amount
+        description: the number of US dollars to send
+      - action: action_check_sufficient_funds
+        next:
+          - if: not slots.has_sufficient_funds
+            then:
+              - action: utter_insufficient_funds
+                next: END
+          - else: final_confirmation
+      - collect: final_confirmation
+        id: final_confirmation
+        next:
+          - if: not slots.final_confirmation
+            then:
+              - action: utter_transfer_cancelled
+                next: END
+          - else: transfer_successful
+      - action: utter_transfer_complete
+        id: transfer_successful
+
+  admission_info:
+    description: This flow lets users ask query about admission module of SIM Portal.
+    steps:
+      - collect: fields
+        description: Fields specifying what information the user wants to know like Aadhar, Admission Number, Family Details, Addresses, Academic Performance and so on. There can be multiple fields
+      - collect: conditions
+        description: Condition specifying whose or which information user wants to know like name, department, whose aadhar, address, academic performance meets the condition. There can be multiple conditions
+      - action: action_fetch_information
+
+#  generate_sql_query:
+#    description: This flow generates SQL query for user's enquiry. The columns and where clause for the SQL query will be taken from an excel at location `data/Search AI Mapping.xlsx`
+#    steps:
+#      - collect: fields
+#        description: Fields specifying what information the user wants to know like Aadhar, Admission Number, Family Details, Addresses, Academic Performance and so on. There can be multiple fields
+#      - collect: conditions
+#        description: Condition specifying whose or which information user wants to know like name, department, whose aadhar, address, academic performance meets the condition. There can be multiple fields
+#      - action: action_generate_sql_query

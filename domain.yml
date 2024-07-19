@@ -1,0 +1,75 @@
+version: "3.1"
+
+actions:
+  - action_check_sufficient_funds
+  - action_check_age
+  - action_fetch_information
+
+slots:
+  first_name:
+    type: text
+  last_name:
+    type: text
+  age:
+    type: float
+  recipient:
+    type: text
+  amount:
+    type: float
+  final_confirmation:
+    type: bool
+  has_sufficient_funds:
+    type: bool
+    mappings:
+      - type: custom
+  is_old_enough:
+    type: bool
+    mappings:
+      - type: custom
+  fields:
+    type: text
+  conditions:
+    type: text
+
+responses:
+  utter_greet:
+    - text: "Hi, I'm a ChatBot powered by Rasa."
+
+  utter_ask_first_name:
+    - text: "Please confirm your first name?"
+
+  utter_ask_last_name:
+    - text: "Please confirm your last name?"
+
+  utter_ask_age:
+    - text: "May I know your age?"
+
+  utter_too_young:
+    - text: "Sorry {first_name} {last_name}, you are too young to make a transaction as you are only {age} years old."
+
+  utter_old_enough:
+    - text: "Welcome {first_name} {last_name}, you are eligible to make a transaction."
+
+  utter_ask_recipient:
+    - text: "Who would you like to send money to?"
+
+  utter_ask_amount:
+    - text: "How much money would you like to send?"
+
+  utter_ask_final_confirmation:
+    - text: "Please confirm: you want to transfer {amount} to {recipient}?"
+
+  utter_transfer_complete:
+    - text: "All done. ${amount} has been sent to {recipient}."
+
+  utter_transfer_cancelled:
+    - text: "Your transfer has been cancelled."
+
+  utter_insufficient_funds:
+    - text: "You do not have enough funds to make this transaction."
+
+  utter_ask_field:
+    - text: "Which field information would you like to know?"
+
+  utter_ask_content:
+    - text: "Whose information do you want to know?"
